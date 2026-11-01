@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AttendEase — Attendance & Project Management</title>
+<style>
+:root{
+  --bg:#f5f7fb;--surface:#fff;--surface2:#f8fafc;--text:#172033;--muted:#667085;
+  --border:#e6e9ef;--primary:#5b5bd6;--primary-dark:#4747b8;--success:#159570;
+  --warning:#c77d16;--danger:#d6455d;--info:#2877b8;--shadow:0 8px 30px rgba(20,30,55,.07);
+  --radius:14px;
+}
+*{box-sizing:border-box} body{margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,Segoe UI,sans-serif;background:var(--bg);color:var(--text)}
+button,input,select,textarea{font:inherit} button{cursor:pointer;border:0}
+.hidden{display:none!important}.app{min-height:100vh;display:flex}.sidebar{width:245px;background:#fff;border-right:1px solid var(--border);padding:20px 14px;position:fixed;inset:0 auto 0 0;z-index:20}
+.brand{display:flex;align-items:center;gap:11px;padding:8px 10px 24px;font-weight:800;font-size:19px}.brand-mark{width:36px;height:36px;border-radius:11px;background:var(--primary);color:white;display:grid;place-items:center;font-weight:800}
+.nav{display:flex;flex-direction:column;gap:4px}.nav button{width:100%;background:transparent;text-align:left;padding:11px 12px;border-radius:10px;color:#5b6475;display:flex;gap:11px;align-items:center}.nav button:hover,.nav button.active{background:#f0f0ff;color:var(--primary);font-weight:650}
+.nav-icon{width:20px;text-align:center}.sidebar-bottom{position:absolute;bottom:16px;left:14px;right:14px;border-top:1px solid var(--border);padding-top:12px}
+.main{margin-left:245px;width:calc(100% - 245px)}.topbar{height:72px;background:#fff;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;padding:0 28px;position:sticky;top:0;z-index:10}
+.page-title{font-size:20px;font-weight:750}.top-actions{display:flex;align-items:center;gap:14px}.search{border:1px solid var(--border);background:#fafbfc;border-radius:9px;padding:9px 12px;width:220px;outline:none}.avatar{width:36px;height:36px;border-radius:50%;background:#e8e8ff;color:var(--primary);display:grid;place-items:center;font-weight:750}
+.content{padding:28px;max-width:1600px;margin:auto}.welcome{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:22px}.welcome h1{margin:0 0 6px;font-size:26px}.muted{color:var(--muted);font-size:14px}.btn{padding:10px 14px;border-radius:9px;background:#eef0f5;color:#344054;font-weight:650}.btn.primary{background:var(--primary);color:#fff}.btn.primary:hover{background:var(--primary-dark)}.btn.danger{background:#fff0f2;color:var(--danger)}.btn.success{background:#eaf8f3;color:var(--success)}.btn.small{padding:7px 10px;font-size:12px}
+.cards{display:grid;grid-template-columns:repeat(5,1fr);gap:14px;margin-bottom:20px}.card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow)}.stat{padding:18px}.stat-top{display:flex;justify-content:space-between;align-items:center}.stat-label{color:var(--muted);font-size:13px}.stat-value{font-size:27px;font-weight:780;margin-top:8px}.stat-icon{width:35px;height:35px;border-radius:10px;background:#f0f0ff;color:var(--primary);display:grid;place-items:center}.grid2{display:grid;grid-template-columns:1.55fr 1fr;gap:18px}.panel{padding:20px}.panel-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:16px}.panel-title{font-weight:750;font-size:15px}.table-wrap{overflow:auto}.table{width:100%;border-collapse:collapse;font-size:13px}.table th{text-align:left;color:#7a8495;font-weight:650;background:#fafbfc}.table th,.table td{padding:12px;border-bottom:1px solid var(--border);white-space:nowrap}.table tr:last-child td{border-bottom:0}.person{display:flex;align-items:center;gap:10px}.mini-avatar{width:30px;height:30px;border-radius:9px;background:#ececff;color:var(--primary);display:grid;place-items:center;font-size:11px;font-weight:750}.badge{display:inline-flex;padding:5px 8px;border-radius:999px;font-size:11px;font-weight:700}.present,.active{background:#eaf8f3;color:var(--success)}.late,.pending{background:#fff5df;color:var(--warning)}.absent,.rejected{background:#fff0f2;color:var(--danger)}.leave,.planned{background:#eef4ff;color:var(--info)}.completed{background:#edf0f4;color:#5d6675}.onhold{background:#fff0e8;color:#a34f22}
+.progress{height:7px;background:#edf0f5;border-radius:99px;overflow:hidden}.progress>span{display:block;height:100%;background:var(--primary);border-radius:99px}.project-card{padding:16px}.project-row{display:flex;justify-content:space-between;gap:15px}.project-title{font-weight:750}.project-meta{font-size:12px;color:var(--muted);margin:5px 0 13px}.section-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:18px}.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px}.toolbar input,.toolbar select,.form input,.form select,.form textarea{border:1px solid var(--border);background:#fff;border-radius:9px;padding:10px 11px;outline:none;width:100%}.toolbar input{width:240px}.toolbar select{width:auto;min-width:150px}.form-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.form label{display:block;font-size:12px;font-weight:700;margin-bottom:6px;color:#475467}.form .full{grid-column:1/-1}.modal-backdrop{position:fixed;inset:0;background:rgba(15,23,42,.42);display:grid;place-items:center;z-index:100;padding:20px}.modal{background:#fff;border-radius:16px;width:min(650px,100%);max-height:90vh;overflow:auto;box-shadow:0 25px 70px rgba(0,0,0,.2)}.modal-head{padding:18px 20px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between}.modal-body{padding:20px}.modal-foot{padding:16px 20px;border-top:1px solid var(--border);display:flex;justify-content:flex-end;gap:9px}.close{background:transparent;font-size:20px;color:#667085}.chart{height:190px;display:flex;align-items:end;gap:12px;padding:15px 4px 0}.bar{flex:1;min-width:18px;background:#d9d9ff;border-radius:7px 7px 2px 2px;position:relative}.bar strong{position:absolute;top:-20px;left:50%;transform:translateX(-50%);font-size:10px}.bar span{position:absolute;bottom:-22px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--muted)}.list{display:flex;flex-direction:column;gap:10px}.list-item{padding:11px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:10px}.list-item:last-child{border-bottom:0}.empty{text-align:center;padding:45px 20px;color:var(--muted)}.toast{position:fixed;right:22px;bottom:22px;background:#172033;color:#fff;padding:12px 16px;border-radius:10px;z-index:200;box-shadow:var(--shadow);font-size:13px}.login{min-height:100vh;display:grid;place-items:center;background:#f4f5fb;padding:20px}.login-box{width:min(430px,100%);background:#fff;padding:34px;border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow)}.login-brand{display:flex;align-items:center;gap:10px;font-size:22px;font-weight:800;margin-bottom:8px}.demo-logins{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px}.demo-logins button{background:#f5f6fa;padding:10px;border-radius:9px;font-size:12px}.detail-head{display:flex;justify-content:space-between;align-items:flex-start;gap:15px;margin-bottom:20px}.detail-card{padding:18px}.kv{display:grid;grid-template-columns:repeat(4,1fr);gap:15px}.kv small{display:block;color:var(--muted);font-size:11px;margin-bottom:5px}.kv strong{font-size:14px}.tabs{display:flex;gap:5px;border-bottom:1px solid var(--border);margin-bottom:16px}.tabs button{background:transparent;padding:10px 13px;color:var(--muted);border-bottom:2px solid transparent}.tabs button.active{color:var(--primary);border-bottom-color:var(--primary);font-weight:700}
+@media(max-width:1100px){.cards{grid-template-columns:repeat(3,1fr)}.grid2{grid-template-columns:1fr}.kv{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:800px){.sidebar{width:72px;padding:18px 9px}.brand span,.nav button span:not(.nav-icon),.sidebar-bottom .muted,.sidebar-bottom .btn{display:none}.brand{justify-content:center;padding-bottom:20px}.nav button{justify-content:center}.main{margin-left:72px;width:calc(100% - 72px)}.topbar{padding:0 15px}.search{display:none}.content{padding:18px}.cards{grid-template-columns:repeat(2,1fr)}.section-grid,.form-grid{grid-template-columns:1fr}.welcome{gap:12px}.welcome .btn{white-space:nowrap}}
+@media(max-width:520px){.cards{grid-template-columns:1fr}.topbar{height:62px}.page-title{font-size:17px}.content{padding:13px}.kv{grid-template-columns:1fr 1fr}.toolbar input{width:100%}.toolbar select{flex:1}.demo-logins{grid-template-columns:1fr}.welcome{flex-direction:column}.welcome .btn{width:100%}}
+.perm-table th,.perm-table td{text-align:center}.perm-table th:first-child,.perm-table td:first-child{text-align:left}.perm-check{width:16px;height:16px;accent-color:var(--primary);cursor:pointer}.perm-check:disabled{cursor:not-allowed}.perm-role{width:auto;min-width:220px}
+</style>
+</head>
+<body>
+<div id="loginScreen" class="login">
+  <div class="login-box">
+    <div class="login-brand"><div class="brand-mark">A</div> AttendEase</div>
+    <div class="muted" style="margin-bottom:24px">Simple attendance and project management for small businesses.</div>
+    <div class="form">
+      <label>Email</label><input id="loginEmail" value="owner@brighttech.com">
+      <label style="margin-top:12px">Password</label><input type="password" value="demo123">
+      <button class="btn primary" style="width:100%;margin-top:18px" onclick="login('COMPANY_OWNER')">Sign in</button>
+    </div>
+    <div class="muted" style="margin-top:18px;text-align:center">Quick demo login</div>
+    <div class="demo-logins">
+      <button onclick="login('COMPANY_OWNER')">Company Owner</button>
+      <button onclick="login('HR_ADMIN')">HR / Admin</button>
+      <button onclick="login('MANAGER')">Manager</button>
+      <button onclick="login('EMPLOYEE')">Employee</button>
+    </div>
+  </div>
+</div>
+
+<div id="app" class="app hidden">
+  <aside class="sidebar">
+    <div class="brand"><div class="brand-mark">A</div><span>AttendEase</span></div>
+    <nav class="nav" id="nav"></nav>
+    <div class="sidebar-bottom">
+      <div class="muted" style="padding:8px 10px">BrightTech Solutions</div>
+      <button class="btn" style="width:100%;margin-top:5px" onclick="logout()">Logout</button>
+    </div>
+  </aside>
+  <main class="main">
+    <header class="topbar">
+      <div class="page-title" id="pageTitle">Dashboard</div>
+      <div class="top-actions">
+        <input class="search" placeholder="Search..." oninput="globalSearch(this.value)">
+        <span id="roleBadge" class="badge planned">Owner</span>
+        <div class="avatar" id="userAvatar">RS</div>
+      </div>
+    </header>
+    <div class="content" id="content"></div>
+  </main>
+</div>
+
+<div id="modalRoot"></div>
+<div id="toastRoot"></div>
+
+<script>
+const KEY='attendease_demo_v1';
+const roles={
+  COMPANY_OWNER:['dashboard','employees','departments','projects','attendance','leave','shifts','reports','salary','settings'],
+  HR_ADMIN:['dashboard','employees','departments','projects','attendance','leave','shifts','reports','settings'],
+  MANAGER:['dashboard','employees','projects','attendance','leave','reports'],
+  EMPLOYEE:['dashboard','attendance','leave','projects']
+};
+const navItems=[
+ ['dashboard','⌂','Dashboard'],['employees','👥','Employees'],['departments','▦','Departments'],
+ ['projects','▣','Projects'],['attendance','◷','Attendance'],['leave','✓','Leave'],
+ ['shifts','◫','Shifts'],['reports','▤','Reports'],['salary','₹','Salary'],['settings','⚙','Settings'],
+ ['permissions','🔐','Role Permissions']
+];
+const permConfig={
+ employees:{create:['COMPANY_OWNER','HR_ADMIN'],update:['COMPANY_OWNER','HR_ADMIN'],delete:['COMPANY_OWNER']},
+ departments:{create:['COMPANY_OWNER','HR_ADMIN'],update:['COMPANY_OWNER','HR_ADMIN'],delete:['COMPANY_OWNER']},
+ projects:{create:['COMPANY_OWNER','HR_ADMIN','MANAGER'],update:['COMPANY_OWNER','HR_ADMIN','MANAGER'],delete:['COMPANY_OWNER','HR_ADMIN']},
+ attendance:{create:['COMPANY_OWNER','HR_ADMIN','EMPLOYEE'],update:['COMPANY_OWNER','HR_ADMIN'],delete:[]},
+ leave:{create:['COMPANY_OWNER','HR_ADMIN','MANAGER','EMPLOYEE'],update:['COMPANY_OWNER','HR_ADMIN','MANAGER'],delete:['COMPANY_OWNER','HR_ADMIN']},
+ shifts:{create:['COMPANY_OWNER','HR_ADMIN'],update:['COMPANY_OWNER','HR_ADMIN'],delete:['COMPANY_OWNER']},
+ reports:{create:[],update:[],delete:[]},
+ salary:{create:[],update:['COMPANY_OWNER'],delete:[]},
+ settings:{create:[],update:['COMPANY_OWNER','HR_ADMIN'],delete:[]},
+ dashboard:{create:[],update:[],delete:[]},
+ permissions:{create:[],update:['COMPANY_OWNER'],delete:[]}
+};
+function buildDefaultPermissions(){
+ const out={};
+ Object.keys(roles).forEach(role=>{
+  out[role]={};
+  navItems.forEach(([mod])=>{
+   const view=roles[role].includes(mod)||(mod==='permissions'&&role==='COMPANY_OWNER');
+   out[role][mod]={view,create:view&&(permConfig[mod]?.create||[]).includes(role),update:view&&(permConfig[mod]?.update||[]).includes(role),delete:view&&(permConfig[mod]?.delete||[]).includes(role)};
+  });
+ });
+ return out;
+}
+const seed={
+ user:{name:'Rahul Sharma',email:'owner@brighttech.com',role:'COMPANY_OWNER'},
+ employees:[
+  {id:1,name:'Rahul Sharma',code:'EMP001',email:'rahul@brighttech.com',phone:'9876543210',dept:'Engineering',designation:'Developer',project:'Website Redesign',shift:'General Shift',joining:'2024-06-12',status:'Active',salary:95000},
+  {id:2,name:'Amit Patel',code:'EMP002',email:'amit@brighttech.com',phone:'9876543211',dept:'Sales',designation:'Sales Executive',project:'Marketing Campaign',shift:'General Shift',joining:'2025-01-15',status:'Active',salary:42000},
+  {id:3,name:'Priya Shah',code:'EMP003',email:'priya@brighttech.com',phone:'9876543212',dept:'HR',designation:'HR Executive',project:'CRM Implementation',shift:'General Shift',joining:'2023-09-10',status:'Active',salary:38000},
+  {id:4,name:'Raj Mehta',code:'EMP004',email:'raj@brighttech.com',phone:'9876543213',dept:'Finance',designation:'Accountant',project:'CRM Implementation',shift:'Morning Shift',joining:'2024-03-18',status:'Active',salary:45000},
+  {id:5,name:'Neha Joshi',code:'EMP005',email:'neha@brighttech.com',phone:'9876543214',dept:'Engineering',designation:'UI Designer',project:'Website Redesign',shift:'General Shift',joining:'2025-02-01',status:'Active',salary:40000},
+  {id:6,name:'Karan Patel',code:'EMP006',email:'karan@brighttech.com',phone:'9876543215',dept:'Engineering',designation:'QA Engineer',project:'Mobile App',shift:'Evening Shift',joining:'2025-04-22',status:'Active',salary:35000}
+ ],
+ departments:[
+  {id:1,name:'Engineering',manager:'Rahul Sharma',count:15,status:'Active'},
+  {id:2,name:'Sales',manager:'Amit Patel',count:10,status:'Active'},
+  {id:3,name:'HR',manager:'Priya Shah',count:4,status:'Active'},
+  {id:4,name:'Finance',manager:'Raj Mehta',count:5,status:'Active'},
+  {id:5,name:'Operations',manager:'Neha Joshi',count:8,status:'Active'}
+ ],
+ projects:[
+  {id:1,name:'Website Redesign',code:'WEB-01',client:'ABC Pvt Ltd',manager:'Rahul Sharma',team:[1,5],start:'2026-10-01',end:'2026-11-30',progress:72,status:'ACTIVE',desc:'Responsive website redesign and UI modernization.'},
+  {id:2,name:'Mobile App',code:'APP-02',client:'XYZ Technologies',manager:'Neha Joshi',team:[3,6],start:'2026-09-15',end:'2027-01-15',progress:45,status:'ACTIVE',desc:'Customer mobile application implementation.'},
+  {id:3,name:'CRM Implementation',code:'CRM-03',client:'Acme Corp',manager:'Priya Shah',team:[2,4],start:'2026-07-01',end:'2026-10-15',progress:100,status:'COMPLETED',desc:'CRM rollout and employee training.'},
+  {id:4,name:'Marketing Campaign',code:'MKT-04',client:'BrightTech',manager:'Amit Patel',team:[2],start:'2026-10-10',end:'2026-12-01',progress:30,status:'ON_HOLD',desc:'Q4 marketing campaign.'}
+ ],
+ attendance:[
+  {id:1,eid:1,date:'2026-10-29',in:'09:02',out:'18:31',hours:'9h 29m',late:0,overtime:'29m',status:'PRESENT'},
+  {id:2,eid:2,date:'2026-10-29',in:'09:28',out:'18:10',hours:'8h 42m',late:28,overtime:'0m',status:'LATE'},
+  {id:3,eid:3,date:'2026-10-29',in:'08:55',out:'17:58',hours:'9h 03m',late:0,overtime:'0m',status:'PRESENT'},
+  {id:4,eid:4,date:'2026-10-29',in:'--',out:'--',hours:'--',late:0,overtime:'0m',status:'LEAVE'},
+  {id:5,eid:5,date:'2026-10-29',in:'09:12',out:'18:22',hours:'9h 10m',late:12,overtime:'22m',status:'LATE'},
+  {id:6,eid:6,date:'2026-10-29',in:'--',out:'--',hours:'--',late:0,overtime:'0m',status:'ABSENT'}
+ ],
+ leaves:[
+  {id:1,eid:4,type:'Paid Leave',start:'2026-10-29',end:'2026-10-29',days:1,reason:'Personal work',status:'APPROVED'},
+  {id:2,eid:5,type:'Sick Leave',start:'2026-10-30',end:'2026-10-31',days:2,reason:'Not feeling well',status:'PENDING'}
+ ],
+ shifts:[
+  {id:1,name:'General Shift',start:'09:00',end:'18:00',grace:10,break:60},
+  {id:2,name:'Morning Shift',start:'06:00',end:'14:00',grace:10,break:30},
+  {id:3,name:'Evening Shift',start:'14:00',end:'22:00',grace:10,break:30},
+  {id:4,name:'Night Shift',start:'22:00',end:'06:00',grace:15,break:30}
+ ],
+ locations:[{id:1,name:'Main Office',address:'Vadodara, Gujarat',lat:'22.3072',lng:'73.1812',radius:100,status:'Active'}],
+ notifications:[
+  {id:1,text:'Amit checked in at 09:28 AM.',time:'10 min ago',read:false},
+  {id:2,text:'Priya approved a leave request.',time:'1 hr ago',read:false},
+  {id:3,text:'Monthly attendance report is ready.',time:'Yesterday',read:true}
+ ],
+ settings:{grace:10,gps:true,qr:true,manual:true,late:true,leave:true,checkout:true},
+ subscription:{plan:'Business',limit:100,renewal:'2026-11-29'}
+};
+function getDB(){let x=localStorage.getItem(KEY);if(!x){localStorage.setItem(KEY,JSON.stringify(seed));x=JSON.stringify(seed)}let data=JSON.parse(x),changed=false;(data.employees||[]).forEach(e=>{if(e.salary==null){let s=seed.employees.find(z=>z.code===e.code);if(s){e.salary=s.salary;changed=true}}});const defaults=buildDefaultPermissions();if(!data.rolePermissions){data.rolePermissions=defaults;changed=true}else{Object.keys(defaults).forEach(role=>{data.rolePermissions[role]=data.rolePermissions[role]||{};Object.keys(defaults[role]).forEach(mod=>{if(!data.rolePermissions[role][mod]){data.rolePermissions[role][mod]=defaults[role][mod];changed=true}})})}if(changed)saveDB(data);return data}
+function saveDB(db){localStorage.setItem(KEY,JSON.stringify(db))}
+let db=getDB(), currentRole=localStorage.getItem('attendease_role')||null, currentPage='dashboard', permRole='COMPANY_OWNER';
+
+function login(role){currentRole=role;localStorage.setItem('attendease_role',role);db=getDB();renderShell();navigate('dashboard')}
+function logout(){localStorage.removeItem('attendease_role');location.reload()}
+function roleName(r){return r==='COMPANY_OWNER'?'Owner':r==='HR_ADMIN'?'HR / Admin':r==='MANAGER'?'Manager':'Employee'}
+function initials(name){return name.split(' ').map(x=>x[0]).slice(0,2).join('').toUpperCase()}
+function can(page){return canView(page)}
+function canView(module){return !!db.rolePermissions?.[currentRole]?.[module]?.view}
+function canCreate(module){return !!db.rolePermissions?.[currentRole]?.[module]?.create}
+function canUpdate(module){return !!db.rolePermissions?.[currentRole]?.[module]?.update}
+function canDelete(module){return !!db.rolePermissions?.[currentRole]?.[module]?.delete}
+function renderShell(){
+ document.getElementById('loginScreen').classList.add('hidden');document.getElementById('app').classList.remove('hidden');
+ document.getElementById('roleBadge').textContent=roleName(currentRole);document.getElementById('userAvatar').textContent=initials(db.user.name);
+ const nav=document.getElementById('nav');nav.innerHTML=navItems.filter(x=>can(x[0])).map(x=>`<button data-page="${x[0]}" onclick="navigate('${x[0]}')"><span class="nav-icon">${x[1]}</span><span>${x[2]}</span></button>`).join('');
+}
+function navigate(page){if(!can(page))return;currentPage=page;document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===page));document.getElementById('pageTitle').textContent=navItems.find(x=>x[0]===page)?.[2]||'Details';renderPage(page)}
+function renderPage(page){
+ const c=document.getElementById('content');
+ const views={dashboard:dashboardView,employees:employeesView,departments:departmentsView,projects:projectsView,attendance:attendanceView,leave:leaveView,shifts:shiftsView,reports:reportsView,salary:salaryView,settings:settingsView,permissions:permissionsView};
+ c.innerHTML=views[page](); bindPage(page);
+}
+function statusBadge(s){let cls=s.toLowerCase().replace('_','');if(cls==='onhold')cls='onhold';return `<span class="badge ${cls}">${s.replace('_',' ')}</span>`}
+function empName(id){return db.employees.find(e=>e.id==id)?.name||'Unknown'}
+function avatar(name){return `<div class="mini-avatar">${initials(name)}</div>`}
+
+function dashboardView(){
+ const a=db.attendance.filter(x=>x.date==='2026-10-29'), present=a.filter(x=>x.status==='PRESENT').length,late=a.filter(x=>x.status==='LATE').length,leave=a.filter(x=>x.status==='LEAVE').length,absent=a.filter(x=>x.status==='ABSENT').length;
+ const isEmp=currentRole==='EMPLOYEE';
+ return `<div class="welcome"><div><h1>${isEmp?'Good morning, '+db.user.name.split(' ')[0]:'Good morning, '+db.user.name.split(' ')[0]}</h1><div class="muted">${isEmp?'Here is your attendance and project overview.':'Here is what is happening across BrightTech Solutions today.'}</div></div>${isEmp?(canCreate('attendance')?`<button class="btn primary" onclick="quickCheckIn()">${todayRecord()?.in&&todayRecord()?.out==='--'?'CHECK OUT':'CHECK IN'}</button>`:''):(canCreate('employees')?`<button class="btn primary" onclick="employeeModal()">+ Add Employee</button>`:'')}</div>
+ ${isEmp?employeeDashboard():`
+ <div class="cards">
+  ${statCard('Total Employees',db.employees.length,'👥')}
+  ${statCard('Present Today',present,'✓')}
+  ${statCard('Late Today',late,'◷')}
+  ${statCard('Absent Today',absent,'!')}
+  ${statCard('On Leave',leave,'•')}
+ </div>
+ <div class="grid2">
+  <div class="card panel"><div class="panel-head"><span class="panel-title">Today's Attendance</span><button class="btn small" onclick="navigate('attendance')">View All</button></div>${attendanceTable(a.slice(0,6))}</div>
+  <div class="card panel"><div class="panel-head"><span class="panel-title">Attendance Overview</span><span class="muted">This week</span></div><div class="chart">${[72,84,79,91,86,95,82].map((v,i)=>`<div class="bar" style="height:${v*1.45}px"><strong>${v}%</strong><span>${['M','T','W','T','F','S','S'][i]}</span></div>`).join('')}</div></div>
+ </div>
+ <div class="card panel" style="margin-top:18px"><div class="panel-head"><span class="panel-title">Active Projects</span><button class="btn small" onclick="navigate('projects')">View Projects</button></div><div class="section-grid">${db.projects.filter(p=>p.status==='ACTIVE').map(p=>projectCard(p)).join('')}</div></div>`}`;
+}
+function statCard(label,value,icon){return `<div class="card stat"><div class="stat-top"><span class="stat-label">${label}</span><div class="stat-icon">${icon}</div></div><div class="stat-value">${value}</div></div>`}
+function employeeDashboard(){
+ const e=db.employees.find(x=>x.id===1)||db.employees[0],r=db.attendance.find(x=>x.eid===e.id&&x.date==='2026-10-29');
+ return `<div class="cards">${statCard('Check In',r?.in||'--','→')}${statCard('Check Out',r?.out||'--','←')}${statCard('Working Hours',r?.hours||'--','◷')}${statCard('Late Minutes',r?.late||0,'!')}${statCard('Current Project',e.project,'▣')}</div>
+ <div class="grid2"><div class="card panel"><div class="panel-head"><span class="panel-title">Today's Attendance</span></div>${attendanceTable([r])}</div><div class="card panel"><div class="panel-head"><span class="panel-title">My Project</span></div>${projectCard(db.projects.find(p=>p.name===e.project)||db.projects[0])}</div></div>`;
+}
+function attendanceTable(rows){
+ if(!rows.length)return `<div class="empty">No attendance records found.</div>`;
+ return `<div class="table-wrap"><table class="table"><thead><tr><th>Employee</th><th>Department</th><th>Check In</th><th>Check Out</th><th>Hours</th><th>Status</th></tr></thead><tbody>${rows.map(r=>{if(!r)return '';let e=db.employees.find(x=>x.id===r.eid);return `<tr><td><div class="person">${avatar(e?.name||'User')}<div><strong>${e?.name||'User'}</strong><div class="muted">${e?.code||''}</div></div></div></td><td>${e?.dept||'—'}</td><td>${r.in}</td><td>${r.out}</td><td>${r.hours}</td><td>${statusBadge(r.status)}</td></tr>`}).join('')}</tbody></table></div>`;
+}
+function projectCard(p,actions=false){
+ if(!p)return '';
+ return `<div class="project-card" style="border:1px solid var(--border);border-radius:12px"><div class="project-row"><div><div class="project-title">${p.name}</div><div class="project-meta">${p.client} · ${p.team.length} members</div></div>${statusBadge(p.status)}</div><div class="muted" style="font-size:12px;margin-bottom:7px">Progress ${p.progress}%</div><div class="progress"><span style="width:${p.progress}%"></span></div><div style="display:flex;justify-content:space-between;margin-top:10px"><span class="muted">Manager: ${p.manager}</span><div style="display:flex;gap:6px">${actions&&canUpdate('projects')?`<button class="btn small" onclick="projectModal(${p.id})">Edit</button>`:''}${actions&&canDelete('projects')?`<button class="btn small danger" onclick="deleteProject(${p.id})">Delete</button>`:''}<button class="btn small" onclick="openProject(${p.id})">Details</button></div></div></div>`;
+}
+
+function employeesView(){
+ return `<div class="welcome"><div><h1>Employees</h1><div class="muted">Manage your workforce and employee details.</div></div>${canCreate('employees')?'<button class="btn primary" onclick="employeeModal()">+ Add Employee</button>':''}</div>
+ <div class="card panel"><div class="toolbar"><input id="empSearch" placeholder="Search employee..." oninput="filterEmployees()"><select id="empDept" onchange="filterEmployees()"><option value="">All Departments</option>${db.departments.map(d=>`<option>${d.name}</option>`).join('')}</select><select id="empStatus" onchange="filterEmployees()"><option value="">All Status</option><option>Active</option><option>Inactive</option></select></div><div id="employeeTable">${employeeTable(db.employees)}</div></div>`;
+}
+function employeeTable(list){
+ if(!list.length)return `<div class="empty">No employees found.</div>`;
+ return `<div class="table-wrap"><table class="table"><thead><tr><th>Employee</th><th>Department</th><th>Designation</th><th>Project</th><th>Shift</th><th>Status</th><th></th></tr></thead><tbody>${list.map(e=>`<tr><td><div class="person">${avatar(e.name)}<div><strong>${e.name}</strong><div class="muted">${e.code}</div></div></div></td><td>${e.dept}</td><td>${e.designation}</td><td>${e.project||'—'}</td><td>${e.shift}</td><td>${statusBadge(e.status.toUpperCase())}</td><td><button class="btn small" onclick="employeeModal(${e.id})">${canUpdate('employees')?'View / Edit':'View'}</button>${canDelete('employees')?` <button class="btn small danger" onclick="deleteEmployee(${e.id})">Delete</button>`:''}</td></tr>`).join('')}</tbody></table></div>`;
+}
+function filterEmployees(){let q=(document.getElementById('empSearch').value||'').toLowerCase(),d=document.getElementById('empDept').value,s=document.getElementById('empStatus').value;let l=db.employees.filter(e=>(!q||`${e.name} ${e.code} ${e.email}`.toLowerCase().includes(q))&&(!d||e.dept===d)&&(!s||e.status===s));document.getElementById('employeeTable').innerHTML=employeeTable(l)}
+function employeeModal(id=null){
+ if(!id&&!canCreate('employees'))return toast('Permission denied');
+ const e=id?db.employees.find(x=>x.id===id):{}, canSave=id?canUpdate('employees'):canCreate('employees');
+ showModal(id?(canSave?'Edit Employee':'View Employee'):'Add Employee',`<div class="form-grid form">
+ <div><label>Full Name</label><input id="f_name" value="${e.name||''}"></div><div><label>Employee Code</label><input id="f_code" value="${e.code||'EMP00'+(db.employees.length+1)}"></div>
+ <div><label>Email</label><input id="f_email" value="${e.email||''}"></div><div><label>Phone</label><input id="f_phone" value="${e.phone||''}"></div>
+ <div><label>Department</label><select id="f_dept">${db.departments.map(d=>`<option ${d.name===e.dept?'selected':''}>${d.name}</option>`).join('')}</select></div>
+ <div><label>Designation</label><input id="f_designation" value="${e.designation||''}"></div>
+ <div><label>Project</label><select id="f_project"><option value="">None</option>${db.projects.map(p=>`<option ${p.name===e.project?'selected':''}>${p.name}</option>`).join('')}</select></div>
+ <div><label>Shift</label><select id="f_shift">${db.shifts.map(s=>`<option ${s.name===e.shift?'selected':''}>${s.name}</option>`).join('')}</select></div>
+ <div><label>Joining Date</label><input type="date" id="f_joining" value="${e.joining||'2026-10-29'}"></div>
+ <div><label>Status</label><select id="f_status"><option ${e.status==='Active'?'selected':''}>Active</option><option ${e.status==='Inactive'?'selected':''}>Inactive</option></select></div>
+ </div>`,canSave?()=>saveEmployee(id):null);
+}
+function saveEmployee(id){
+ if(id&&!canUpdate('employees'))return toast('Permission denied');
+ if(!id&&!canCreate('employees'))return toast('Permission denied');
+ const e={id:id||Date.now(),name:v('f_name'),code:v('f_code'),email:v('f_email'),phone:v('f_phone'),dept:v('f_dept'),designation:v('f_designation'),project:v('f_project'),shift:v('f_shift'),joining:v('f_joining'),status:v('f_status')};
+ if(!e.name)return toast('Enter employee name');
+ if(id){let i=db.employees.findIndex(x=>x.id===id);db.employees[i]=e}else db.employees.push(e);saveDB(db);closeModal();renderPage('employees');toast(id?'Employee updated':'Employee created');
+}
+function deleteEmployee(id){if(!canDelete('employees'))return toast('Permission denied');const e=db.employees.find(x=>x.id===id);if(!e||!confirm(`Delete ${e.name}?`))return;db.employees=db.employees.filter(x=>x.id!==id);saveDB(db);renderPage('employees');toast('Employee deleted')}
+
+function departmentsView(){return `<div class="welcome"><div><h1>Departments</h1><div class="muted">Organize employees by business function.</div></div>${canCreate('departments')?'<button class="btn primary" onclick="departmentModal()">+ Add Department</button>':''}</div><div class="section-grid">${db.departments.map(d=>`<div class="card panel"><div class="panel-head"><div><div class="panel-title">${d.name}</div><div class="muted">${d.manager}</div></div>${statusBadge(d.status.toUpperCase())}</div><div style="font-size:25px;font-weight:800">${d.count}</div><div class="muted">Employees</div><div style="margin-top:12px;display:flex;gap:6px">${canUpdate('departments')?`<button class="btn small" onclick="departmentModal(${d.id})">Edit</button>`:''}${canDelete('departments')?`<button class="btn small danger" onclick="deleteDepartment(${d.id})">Delete</button>`:''}</div></div>`).join('')}</div>`}
+function departmentModal(id=null){if(id?!canUpdate('departments'):!canCreate('departments'))return toast('Permission denied');let d=id?db.departments.find(x=>x.id===id):{};showModal(id?'Edit Department':'Add Department',`<div class="form"><label>Department Name</label><input id="d_name" value="${d.name||''}"><label style="margin-top:12px">Manager</label><input id="d_manager" value="${d.manager||''}"></div>`,()=>{let x={id:id||Date.now(),name:v('d_name'),manager:v('d_manager'),count:d.count||0,status:'Active'};if(id)db.departments[db.departments.findIndex(z=>z.id===id)]=x;else db.departments.push(x);saveDB(db);closeModal();renderPage('departments');toast('Department saved')})}
+function deleteDepartment(id){if(!canDelete('departments'))return toast('Permission denied');const d=db.departments.find(x=>x.id===id);if(!d||!confirm(`Delete ${d.name}?`))return;db.departments=db.departments.filter(x=>x.id!==id);saveDB(db);renderPage('departments');toast('Department deleted')}
+
+function projectsView(){
+ const allow=canCreate('projects');
+ return `<div class="welcome"><div><h1>Projects</h1><div class="muted">Track projects, team members and project hours.</div></div>${allow?'<button class="btn primary" onclick="projectModal()">+ New Project</button>':''}</div>
+ <div class="toolbar"><input id="projectSearch" placeholder="Search projects..." oninput="filterProjects()"><select id="projectStatus" onchange="filterProjects()"><option value="">All Status</option><option>ACTIVE</option><option>PLANNED</option><option>ON_HOLD</option><option>COMPLETED</option></select></div>
+ <div class="section-grid" id="projectGrid">${db.projects.map(p=>projectCard(p,true)).join('')}</div>`;
+}
+function filterProjects(){let q=(v('projectSearch')||'').toLowerCase(),s=v('projectStatus');document.getElementById('projectGrid').innerHTML=db.projects.filter(p=>(!q||`${p.name} ${p.client} ${p.code}`.toLowerCase().includes(q))&&(!s||p.status===s)).map(p=>projectCard(p,true)).join('')}
+function projectModal(id=null){
+ if(id?!canUpdate('projects'):!canCreate('projects'))return toast('You do not have permission to save projects');
+ let p=id?db.projects.find(x=>x.id===id):{};
+ showModal(id?'Edit Project':'Create Project',`<div class="form-grid form">
+ <div><label>Project Name</label><input id="p_name" value="${p.name||''}"></div><div><label>Project Code</label><input id="p_code" value="${p.code||'PRJ-'+String(db.projects.length+1).padStart(2,'0')}"></div>
+ <div><label>Client Name</label><input id="p_client" value="${p.client||''}"></div><div><label>Project Manager</label><input id="p_manager" value="${p.manager||db.user.name}"></div>
+ <div><label>Start Date</label><input type="date" id="p_start" value="${p.start||'2026-10-29'}"></div><div><label>End Date</label><input type="date" id="p_end" value="${p.end||'2026-12-31'}"></div>
+ <div><label>Status</label><select id="p_status"><option>PLANNED</option><option>ACTIVE</option><option>ON_HOLD</option><option>COMPLETED</option><option>CANCELLED</option></select></div><div><label>Progress %</label><input type="number" min="0" max="100" id="p_progress" value="${p.progress||0}"></div>
+ <div class="full"><label>Description</label><textarea id="p_desc" rows="3">${p.desc||''}</textarea></div>
+ </div>`,()=>saveProject(id));
+}
+function saveProject(id){if(id&&!canUpdate('projects'))return toast('Permission denied');if(!id&&!canCreate('projects'))return toast('Permission denied');let p={id:id||Date.now(),name:v('p_name'),code:v('p_code'),client:v('p_client'),manager:v('p_manager'),start:v('p_start'),end:v('p_end'),status:v('p_status'),progress:Number(v('p_progress'))||0,desc:v('p_desc'),team:id?(db.projects.find(x=>x.id===id)?.team||[]):[]};if(!p.name)return toast('Enter project name');if(id)db.projects[db.projects.findIndex(x=>x.id===id)]=p;else db.projects.push(p);saveDB(db);closeModal();renderPage('projects');toast('Project saved')}
+function deleteProject(id){if(!canDelete('projects'))return toast('Permission denied');const p=db.projects.find(x=>x.id===id);if(!p||!confirm(`Delete ${p.name}?`))return;db.projects=db.projects.filter(x=>x.id!==id);saveDB(db);renderPage('projects');toast('Project deleted')}
+function openProject(id){let p=db.projects.find(x=>x.id===id);let team=p.team.map(eid=>db.employees.find(e=>e.id===eid)).filter(Boolean);showModal(p.name,`<div class="detail-card" style="padding:0;border:0"><div class="kv"><div><small>Client</small><strong>${p.client}</strong></div><div><small>Manager</small><strong>${p.manager}</strong></div><div><small>Start</small><strong>${p.start}</strong></div><div><small>End</small><strong>${p.end}</strong></div></div><div style="margin:22px 0 8px;display:flex;justify-content:space-between"><strong>Progress ${p.progress}%</strong>${statusBadge(p.status)}</div><div class="progress"><span style="width:${p.progress}%"></span></div><p class="muted" style="margin-top:18px">${p.desc||'No description.'}</p><hr style="border:0;border-top:1px solid var(--border);margin:20px 0"><div class="panel-title" style="margin-bottom:10px">Team Members</div>${team.length?`<table class="table"><thead><tr><th>Employee</th><th>Role</th><th>Department</th></tr></thead><tbody>${team.map(e=>`<tr><td><div class="person">${avatar(e.name)}${e.name}</div></td><td>${e.designation}</td><td>${e.dept}</td></tr>`).join('')}</tbody></table>`:'<div class="empty">No team members assigned.</div>'}</div>`,null,id);
+}
+function attendanceView(){
+ let rows=currentRole==='EMPLOYEE'?db.attendance.filter(x=>x.eid===1):db.attendance;
+ return `<div class="welcome"><div><h1>Attendance</h1><div class="muted">Monitor daily check-ins, working hours, late arrivals and overtime.</div></div>${currentRole==='EMPLOYEE'?(canCreate('attendance')?'<button class="btn primary" onclick="quickCheckIn()">Check In / Out</button>':''):(canCreate('attendance')?'<button class="btn primary" onclick="manualAttendance()">+ Manual Entry</button>':'')}</div>
+ <div class="cards" style="grid-template-columns:repeat(4,1fr)">${statCard('Present',db.attendance.filter(x=>x.status==='PRESENT').length,'✓')}${statCard('Late',db.attendance.filter(x=>x.status==='LATE').length,'◷')}${statCard('Leave',db.attendance.filter(x=>x.status==='LEAVE').length,'•')}${statCard('Absent',db.attendance.filter(x=>x.status==='ABSENT').length,'!')}</div>
+ <div class="card panel"><div class="toolbar"><input type="date" value="2026-10-29"><select><option>All Departments</option>${db.departments.map(d=>`<option>${d.name}</option>`).join('')}</select><select><option>All Status</option><option>PRESENT</option><option>LATE</option><option>ABSENT</option><option>LEAVE</option></select><button class="btn" onclick="exportCSV()">Export CSV</button></div>${attendanceTable(rows)}</div>`;
+}
+function quickCheckIn(){let r=todayRecord();if(!r){r={id:Date.now(),eid:1,date:'2026-10-29',in:timeNow(),out:'--',hours:'0h 00m',late:0,overtime:'0m',status:'PRESENT'};db.attendance.push(r);toast('Checked in successfully')}else if(r.in&&r.out==='--'){r.out=timeNow();r.hours=calcHours(r.in,r.out);r.overtime='0m';toast('Checked out successfully')}else toast('Attendance already completed for today');saveDB(db);renderPage(currentPage)}
+function todayRecord(){return db.attendance.find(x=>x.eid===1&&x.date==='2026-10-29')}
+function timeNow(){return new Date().toLocaleTimeString([], {hour:'2-digit',minute:'2-digit',hour12:false})}
+function calcHours(a,b){let [h,m]=a.split(':').map(Number),[h2,m2]=b.split(':').map(Number),d=h2*60+m2-(h*60+m);if(d<0)d+=1440;return `${Math.floor(d/60)}h ${String(d%60).padStart(2,'0')}m`}
+function manualAttendance(){if(!canCreate('attendance'))return toast('Permission denied');showModal('Manual Attendance',`<div class="form"><label>Employee</label><select id="ma_e">${db.employees.map(e=>`<option value="${e.id}">${e.name}</option>`).join('')}</select><label style="margin-top:12px">Check In</label><input id="ma_in" value="09:00"><label style="margin-top:12px">Check Out</label><input id="ma_out" value="18:00"><label style="margin-top:12px">Status</label><select id="ma_status"><option>PRESENT</option><option>LATE</option><option>ABSENT</option><option>LEAVE</option></select></div>`,()=>{let eid=Number(v('ma_e')),inn=v('ma_in'),out=v('ma_out');db.attendance.push({id:Date.now(),eid,date:'2026-10-29',in:inn,out,hours:inn&&out?calcHours(inn,out):'--',late:0,overtime:'0m',status:v('ma_status')});saveDB(db);closeModal();renderPage('attendance');toast('Attendance updated')})}
+
+function leaveView(){
+ let rows=currentRole==='EMPLOYEE'?db.leaves.filter(x=>x.eid===1):db.leaves;
+ return `<div class="welcome"><div><h1>Leave Management</h1><div class="muted">Manage leave requests and approvals.</div></div>${canCreate('leave')?'<button class="btn primary" onclick="leaveModal()">+ Apply Leave</button>':''}</div>
+ <div class="cards" style="grid-template-columns:repeat(4,1fr)">${statCard('Pending',db.leaves.filter(x=>x.status==='PENDING').length,'…')}${statCard('Approved',db.leaves.filter(x=>x.status==='APPROVED').length,'✓')}${statCard('Rejected',db.leaves.filter(x=>x.status==='REJECTED').length,'!')}${statCard('Leave Today',db.leaves.filter(x=>x.start==='2026-10-29'&&x.status==='APPROVED').length,'•')}</div>
+ <div class="card panel"><div class="table-wrap"><table class="table"><thead><tr><th>Employee</th><th>Type</th><th>Dates</th><th>Days</th><th>Reason</th><th>Status</th><th>Actions</th></tr></thead><tbody>${rows.map(l=>`<tr><td>${empName(l.eid)}</td><td>${l.type}</td><td>${l.start} → ${l.end}</td><td>${l.days}</td><td>${l.reason}</td><td>${statusBadge(l.status)}</td><td>${l.status==='PENDING'&&canUpdate('leave')?`<button class="btn small success" onclick="setLeave(${l.id},'APPROVED')">Approve</button> <button class="btn small danger" onclick="setLeave(${l.id},'REJECTED')">Reject</button>`:''}${canDelete('leave')?`<button class="btn small danger" onclick="deleteLeave(${l.id})">Delete</button>`:''}${!canDelete('leave')&&!(l.status==='PENDING'&&canUpdate('leave'))?'—':''}</td></tr>`).join('')}</tbody></table></div></div>`;
+}
+function leaveModal(){if(!canCreate('leave'))return toast('Permission denied');showModal('Apply Leave',`<div class="form"><label>Leave Type</label><select id="l_type"><option>Casual Leave</option><option>Sick Leave</option><option>Paid Leave</option><option>Unpaid Leave</option></select><label style="margin-top:12px">Start Date</label><input type="date" id="l_start" value="2026-10-30"><label style="margin-top:12px">End Date</label><input type="date" id="l_end" value="2026-10-30"><label style="margin-top:12px">Reason</label><textarea id="l_reason" rows="3"></textarea></div>`,()=>{let s=v('l_start'),e=v('l_end'),days=Math.max(1,Math.ceil((new Date(e)-new Date(s))/86400000)+1);db.leaves.push({id:Date.now(),eid:1,type:v('l_type'),start:s,end:e,days,reason:v('l_reason')||'Personal',status:'PENDING'});saveDB(db);closeModal();renderPage('leave');toast('Leave request submitted')})}
+function setLeave(id,status){if(!canUpdate('leave'))return toast('Permission denied');let l=db.leaves.find(x=>x.id===id);if(l){l.status=status;saveDB(db);renderPage('leave');toast(`Leave ${status.toLowerCase()}`)}}
+function deleteLeave(id){if(!canDelete('leave'))return toast('Permission denied');const l=db.leaves.find(x=>x.id===id);if(!l||!confirm('Delete this leave request?'))return;db.leaves=db.leaves.filter(x=>x.id!==id);saveDB(db);renderPage('leave');toast('Leave deleted')}
+
+function shiftsView(){return `<div class="welcome"><div><h1>Shifts</h1><div class="muted">Configure working schedules and grace periods.</div></div>${canCreate('shifts')?'<button class="btn primary" onclick="shiftModal()">+ Add Shift</button>':''}</div><div class="section-grid">${db.shifts.map(s=>`<div class="card panel"><div class="panel-head"><span class="panel-title">${s.name}</span><div style="display:flex;gap:6px">${canUpdate('shifts')?`<button class="btn small" onclick="shiftModal(${s.id})">Edit</button>`:''}${canDelete('shifts')?`<button class="btn small danger" onclick="deleteShift(${s.id})">Delete</button>`:''}</div></div><div style="font-size:23px;font-weight:800">${s.start} — ${s.end}</div><div class="muted" style="margin-top:7px">Grace ${s.grace} min · Break ${s.break} min</div></div>`).join('')}</div><div class="card panel" style="margin-top:18px"><div class="panel-title" style="margin-bottom:12px">Office Locations</div>${db.locations.map(l=>`<div class="list-item"><div><strong>${l.name}</strong><div class="muted">${l.address} · Radius ${l.radius}m</div></div>${statusBadge(l.status.toUpperCase())}</div>`).join('')}</div>`}
+function shiftModal(id=null){if(id?!canUpdate('shifts'):!canCreate('shifts'))return toast('Permission denied');let s=id?db.shifts.find(x=>x.id===id):{};showModal(id?'Edit Shift':'Add Shift',`<div class="form-grid form"><div><label>Shift Name</label><input id="s_name" value="${s.name||''}"></div><div><label>Grace Minutes</label><input type="number" id="s_grace" value="${s.grace||10}"></div><div><label>Start Time</label><input type="time" id="s_start" value="${s.start||'09:00'}"></div><div><label>End Time</label><input type="time" id="s_end" value="${s.end||'18:00'}"></div><div><label>Break Minutes</label><input type="number" id="s_break" value="${s.break||60}"></div></div>`,()=>{let x={id:id||Date.now(),name:v('s_name'),start:v('s_start'),end:v('s_end'),grace:Number(v('s_grace')),break:Number(v('s_break'))};if(id)db.shifts[db.shifts.findIndex(z=>z.id===id)]=x;else db.shifts.push(x);saveDB(db);closeModal();renderPage('shifts');toast('Shift saved')})}
+function deleteShift(id){if(!canDelete('shifts'))return toast('Permission denied');const s=db.shifts.find(x=>x.id===id);if(!s||!confirm(`Delete ${s.name}?`))return;db.shifts=db.shifts.filter(x=>x.id!==id);saveDB(db);renderPage('shifts');toast('Shift deleted')}
+
+function reportsView(){return `<div class="welcome"><div><h1>Reports</h1><div class="muted">Attendance, overtime and project productivity reports.</div></div><button class="btn primary" onclick="exportCSV()">Export CSV</button></div><div class="cards" style="grid-template-columns:repeat(4,1fr)">${statCard('Attendance Rate','88%','%')}${statCard('Total Hours','192h','◷')}${statCard('Late Arrivals','14','!')}${statCard('Overtime','18h','+')}</div><div class="grid2"><div class="card panel"><div class="panel-head"><span class="panel-title">Monthly Attendance</span><span class="muted">October 2026</span></div><div class="chart">${[76,82,79,88,92,86,91,94,89,95,88,92].map((v,i)=>`<div class="bar" style="height:${v*1.3}px"><strong>${v}%</strong><span>${i+1}</span></div>`).join('')}</div></div><div class="card panel"><div class="panel-head"><span class="panel-title">Project Hours</span></div>${db.projects.map(p=>`<div class="list-item"><div><strong>${p.name}</strong><div class="muted">${p.team.length} members</div></div><strong>${p.progress*2}h</strong></div>`).join('')}</div></div>`}
+function money(n){return '₹'+Number(n||0).toLocaleString('en-IN')}
+function salaryView(){
+ const list=db.employees,total=list.reduce((s,e)=>s+(Number(e.salary)||0),0),avg=list.length?Math.round(total/list.length):0,top=list.reduce((a,e)=>(Number(e.salary)||0)>(Number(a.salary)||0)?e:a,list[0]||{});
+ return `<div class="welcome"><div><h1>Salary</h1><div class="muted">Compensation details for authorized roles.</div></div><span class="badge planned">Restricted access</span></div>
+ <div class="cards" style="grid-template-columns:repeat(4,1fr)">${statCard('Monthly Payroll',money(total),'₹')}${statCard('Average Salary',money(avg),'≈')}${statCard('Highest Paid',top.name||'—','★')}${statCard('Employees',list.length,'👥')}</div>
+ <div class="card panel"><div class="panel-head"><span class="panel-title">Employee Salaries</span><span class="muted">Amounts shown per month</span></div>${salaryTable(list)}</div>`;
+}
+function salaryTable(list){
+ if(!list.length)return `<div class="empty">No employees found.</div>`;
+ return `<div class="table-wrap"><table class="table"><thead><tr><th>Employee</th><th>Department</th><th>Designation</th><th>Monthly Salary</th><th>Annual CTC</th><th>Status</th><th></th></tr></thead><tbody>${list.map(e=>`<tr><td><div class="person">${avatar(e.name)}<div><strong>${e.name}</strong><div class="muted">${e.code}</div></div></div></td><td>${e.dept}</td><td>${e.designation}</td><td><strong>${money(e.salary)}</strong></td><td>${money((Number(e.salary)||0)*12)}</td><td>${statusBadge(e.status.toUpperCase())}</td><td>${canUpdate('salary')?`<button class="btn small" onclick="salaryModal(${e.id})">Edit Salary</button>`:'—'}</td></tr>`).join('')}</tbody></table></div>`;
+}
+function salaryModal(id){
+ if(!canUpdate('salary'))return toast('Permission denied');
+ const e=db.employees.find(x=>x.id===id);
+ if(!e)return;
+ showModal('Edit Salary — '+e.name,`<div class="form"><label>Monthly Salary (₹)</label><input type="number" min="0" step="1000" id="sal_amount" value="${e.salary||0}"><div class="muted" style="margin-top:8px">Annual CTC: ${money((Number(e.salary)||0)*12)}</div></div>`,()=>saveSalary(id));
+}
+function saveSalary(id){
+ if(!canUpdate('salary'))return toast('Permission denied');
+ const e=db.employees.find(x=>x.id===id),amount=Number(v('sal_amount'));
+ if(!e)return;
+ if(!Number.isFinite(amount)||amount<0)return toast('Enter a valid salary');
+ e.salary=amount;saveDB(db);closeModal();renderPage('salary');toast('Salary updated');
+}
+function exportCSV(){let rows=[['Employee','Date','Check In','Check Out','Hours','Status']];db.attendance.forEach(r=>rows.push([empName(r.eid),r.date,r.in,r.out,r.hours,r.status]));let csv=rows.map(x=>x.map(v=>`"${String(v).replaceAll('"','""')}"`).join(',')).join('\\n');let a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='attendance-report.csv';a.click();toast('CSV exported')}
+
+function settingsView(){const canEdit=canUpdate('settings');return `<div class="welcome"><div><h1>Settings</h1><div class="muted">Configure company, attendance and notification preferences.</div></div></div><div class="grid2"><div class="card panel"><div class="panel-head"><span class="panel-title">Company Settings</span></div><div class="form"><label>Company Name</label><input value="BrightTech Solutions"><label style="margin-top:12px">Email</label><input value="admin@brighttech.com"><label style="margin-top:12px">Phone</label><input value="+91 98765 43210"><label style="margin-top:12px">Address</label><textarea rows="3">Vadodara, Gujarat, India</textarea></div></div><div class="card panel"><div class="panel-head"><span class="panel-title">Attendance Settings</span></div>${toggle('Grace period', 'Allow 10-minute grace period',true,canEdit)}${toggle('GPS attendance','Validate office location',db.settings.gps,canEdit)}${toggle('QR attendance','Allow QR check-in',db.settings.qr,canEdit)}${toggle('Manual correction','Allow HR to edit attendance',db.settings.manual,canEdit)}${toggle('Late alerts','Notify managers about late arrivals',db.settings.late,canEdit)}${toggle('Check-out reminder','Remind employees to check out',db.settings.checkout,canEdit)}${canEdit?'<button class="btn primary" style="margin-top:12px" onclick="toast(\'Settings saved\')">Save Settings</button>':''}</div></div><div class="card panel" style="margin-top:18px"><div class="panel-head"><span class="panel-title">Subscription</span>${statusBadge(db.subscription.plan.toUpperCase())}</div><div class="kv"><div><small>Current Plan</small><strong>${db.subscription.plan}</strong></div><div><small>Employee Limit</small><strong>${db.subscription.limit}</strong></div><div><small>Employees Used</small><strong>${db.employees.length}</strong></div><div><small>Renewal</small><strong>${db.subscription.renewal}</strong></div></div><button class="btn primary" style="margin-top:18px" onclick="toast('Upgrade flow opened')">Manage Subscription</button></div>`}
+function toggle(title,sub,on,editable=true){return `<div class="list-item"><div><strong>${title}</strong><div class="muted">${sub}</div></div><button class="btn small ${on?'success':''}" ${editable?`onclick="this.classList.toggle('success');this.textContent=this.classList.contains('success')?'On':'Off'"`:'disabled style="opacity:.55;cursor:not-allowed"'}>${on?'On':'Off'}</button></div>`}
+
+function permissionsView(){
+ const editable=canUpdate('permissions');
+ const options=Object.keys(roles).map(r=>`<option value="${r}" ${r===permRole?'selected':''}>${roleName(r)}</option>`).join('');
+ return `<div class="welcome"><div><h1>Role Permissions</h1><div class="muted">Map modules to each role and control view, create, update and delete access.</div></div><span class="badge ${editable?'present':'pending'}">${editable?'Editable':'Read only'}</span></div>
+ <div class="card panel"><div class="toolbar"><select class="perm-role" onchange="setPermRole(this.value)">${options}</select><span class="muted">Changes are saved instantly and apply to every user with that role.</span></div>
+ <div class="table-wrap"><table class="table perm-table"><thead><tr><th>Module</th><th>View</th><th>Create</th><th>Update</th><th>Delete</th></tr></thead><tbody>${navItems.map(([mod,,label])=>permRow(permRole,mod,label,editable)).join('')}</tbody></table></div>
+ <div class="muted" style="margin-top:12px">Only modules with View enabled appear in the sidebar for that role. Create, Update and Delete control the action buttons inside each module.</div></div>`;
+}
+function setPermRole(role){permRole=role;renderPage('permissions')}
+function permRow(role,mod,label,editable){
+ const p=db.rolePermissions[role]?.[mod]||{};
+ const cb=action=>`<input id="perm_${role}_${mod}_${action}" class="perm-check" type="checkbox" ${p[action]?'checked':''} ${editable?`onchange="togglePerm('${role}','${mod}','${action}',this)"`:'disabled'}>`;
+ return `<tr><td><strong>${label}</strong><div class="muted">${mod}</div></td><td>${cb('view')}</td><td>${cb('create')}</td><td>${cb('update')}</td><td>${cb('delete')}</td></tr>`;
+}
+function togglePerm(role,module,action,el){
+ if(!canUpdate('permissions'))return toast('Permission denied');
+ if(role==='COMPANY_OWNER'&&module==='permissions'&&(action==='view'||action==='update')&&!el.checked){el.checked=true;return toast('Owner must retain Role Permissions access')}
+ const p=db.rolePermissions[role][module]||{view:false,create:false,update:false,delete:false};
+ p[action]=el.checked;
+ if(action==='view'&&!el.checked){p.create=false;p.update=false;p.delete=false}
+ if(action!=='view'&&el.checked)p.view=true;
+ db.rolePermissions[role][module]=p;saveDB(db);
+ if(role===currentRole){
+  renderShell();
+  if(!canView(currentPage)){const first=navItems.find(x=>canView(x[0]));if(first){navigate(first[0]);return}}
+ }
+ renderPage('permissions');toast('Permissions updated');
+}
+
+function globalSearch(q){if(!q)return; if(q.length>2){let e=db.employees.find(x=>x.name.toLowerCase().includes(q.toLowerCase()));if(e){navigate('employees');setTimeout(()=>{document.getElementById('empSearch').value=q;filterEmployees()},50)}}}
+function showModal(title,body,onSave,id=null){document.getElementById('modalRoot').innerHTML=`<div class="modal-backdrop" onclick="if(event.target===this)closeModal()"><div class="modal"><div class="modal-head"><strong>${title}</strong><button class="close" onclick="closeModal()">×</button></div><div class="modal-body">${body}</div>${onSave?`<div class="modal-foot"><button class="btn" onclick="closeModal()">Cancel</button><button class="btn primary" onclick="modalSave()">Save</button></div>`:''}</div></div>`;window._modalSave=onSave}
+function modalSave(){if(window._modalSave)window._modalSave()}
+function closeModal(){document.getElementById('modalRoot').innerHTML='';window._modalSave=null}
+function v(id){return document.getElementById(id)?.value||''}
+function toast(msg){let r=document.getElementById('toastRoot');r.innerHTML=`<div class="toast">${msg}</div>`;setTimeout(()=>r.innerHTML='',2200)}
+function bindPage(){}
+
+if(currentRole){renderShell();navigate('dashboard')}
+</script>
+</body>
+</html>

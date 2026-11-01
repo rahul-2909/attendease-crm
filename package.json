@@ -1,0 +1,19 @@
+{
+  "name": "attendance-saas",
+  "version": "1.0.0",
+  "private": true,
+  "workspaces": [
+    "frontend-web"
+  ],
+  "scripts": {
+    "dev": "npm run dev --workspace frontend-web",
+    "build": "npm run build --workspace frontend-web",
+    "start": "npm run start --workspace frontend-web",
+    "dev:api": "npm run dev --prefix backend-api",
+    "start:api": "npm run start --prefix backend-api",
+    "seed:api": "npm run seed --prefix backend-api",
+    "test:api": "npm run test --prefix backend-api",
+    "test:frontend": "npm run test --workspace frontend-web",
+    "test": "npm run test:api && npm run test:frontend"
+  }
+}

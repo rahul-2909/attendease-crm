@@ -1,0 +1,13 @@
+const LEAVE_STATUS = {
+  PENDING: 'PENDING',
+  APPROVED: 'APPROVED',
+  REJECTED: 'REJECTED',
+  CANCELLED: 'CANCELLED',
+};
+
+const LEAVE_TYPES = ['ANNUAL', 'SICK', 'CASUAL', 'UNPAID', 'OTHER'];
+
+module.exports = {
+  LEAVE_STATUS,
+  LEAVE_TYPES,
+};

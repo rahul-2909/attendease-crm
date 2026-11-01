@@ -1,0 +1,243 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap');
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #f6f8fc 0%, #e9edf4 100%);
+  padding: 20px;
+  font-family: 'DM Sans', sans-serif;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  background: white;
+  border-radius: 12px;
+  border: 1px solid #e9edf4;
+  box-shadow: 0 4px 24px rgba(37, 52, 91, 0.08);
+  padding: 40px;
+}
+
+.login-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.login-brand {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 24px;
+  color: #202b45;
+  font: 800 24px Manrope, sans-serif;
+  letter-spacing: -1px;
+}
+
+.login-brand-mark {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  place-items: center;
+  border-radius: 10px;
+  background: #6759e8;
+  color: white;
+  font-size: 20px;
+}
+
+.login-header h1 {
+  margin: 0 0 8px;
+  color: #202b45;
+  font: 700 28px Manrope, sans-serif;
+  letter-spacing: -0.8px;
+}
+
+.login-header p {
+  margin: 0;
+  color: #909bad;
+  font-size: 14px;
+}
+
+.login-tabs {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  padding: 4px;
+  margin-bottom: 22px;
+  border-radius: 10px;
+  background: #f1f3f9;
+}
+
+.login-tab {
+  height: 36px;
+  border: 0;
+  border-radius: 8px;
+  background: transparent;
+  color: #6f7a8e;
+  font: 600 13px 'DM Sans', sans-serif;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+
+.login-tab.active {
+  background: #fff;
+  color: #202b45;
+  box-shadow: 0 1px 4px rgba(37, 52, 91, 0.12);
+}
+
+.login-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.demo-box {
+  margin-top: 26px;
+  padding-top: 18px;
+  border-top: 1px dashed #e9edf4;
+}
+
+.demo-box p {
+  margin: 0 0 10px;
+  color: #909bad;
+  font: 600 11px 'DM Sans', sans-serif;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.demo-account {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 8px;
+  border: 1px solid #e9edf4;
+  border-radius: 8px;
+  background: #fbfcfe;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.2s, background 0.2s;
+}
+
+.demo-account:hover {
+  border-color: #c9c2f7;
+  background: #f7f5ff;
+}
+
+.demo-account span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.demo-account strong {
+  color: #202b45;
+  font: 600 13px 'DM Sans', sans-serif;
+}
+
+.demo-account small {
+  color: #7b8698;
+  font-size: 12px;
+}
+
+.demo-account em {
+  color: #a0a9b8;
+  font-size: 11px;
+  font-style: normal;
+  text-align: right;
+  max-width: 130px;
+}
+
+.login-error {
+  padding: 12px 16px;
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 8px;
+  color: #dc2626;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.form-group label {
+  color: #39445a;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.form-group input {
+  height: 44px;
+  padding: 0 14px;
+  border: 1px solid #e9edf4;
+  border-radius: 8px;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  color: #202b45;
+  transition: border-color 0.2s;
+}
+
+.form-group input:focus {
+  outline: none;
+  border-color: #6759e8;
+}
+
+.form-group input::placeholder {
+  color: #a6afbd;
+}
+
+.login-button {
+  height: 46px;
+  margin-top: 8px;
+  border: 0;
+  border-radius: 8px;
+  background: #6558df;
+  color: white;
+  font-family: 'DM Sans', sans-serif;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.2s;
+  box-shadow: 0 3px 8px rgba(101, 88, 223, 0.2);
+}
+
+.login-button:hover:not(:disabled) {
+  background: #5847d1;
+}
+
+.login-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+@media (max-width: 480px) {
+  .login-card {
+    padding: 28px 24px;
+  }
+
+  .login-header h1 {
+    font-size: 24px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+
+  .demo-account em {
+    display: none;
+  }
+}
